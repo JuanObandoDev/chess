@@ -30,4 +30,7 @@ func New(cfg *config.Config) (*zap.Logger, error) {
 
 var Module = fx.Options(
 	fx.Provide(New),
+	fx.Invoke(func(l *zap.Logger) {
+		zap.ReplaceGlobals(l)
+	}),
 )
