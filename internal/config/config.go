@@ -10,7 +10,8 @@ type Config struct {
 	Production bool          `envconfig:"PRODUCTION" default:"false"`
 	LogLevel   zapcore.Level `envconfig:"LOG_LEVEL"  default:"info"`
 
-	ListenAddr string `envconfig:"LISTEN_ADDR" default:"0.0.0.0:8000"`
+	ListenAddr       string `envconfig:"LISTEN_ADDR"        default:"0.0.0.0:8000"`
+	PublicWebAddress string `envconfig:"PUBLIC_WEB_ADDRESS" default:"http://localhost:3000"`
 }
 
 func New() (*Config, error) {
