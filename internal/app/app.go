@@ -10,6 +10,7 @@ import (
 	"github.com/sanpezlo/chess/internal/config"
 	"github.com/sanpezlo/chess/internal/db"
 	"github.com/sanpezlo/chess/internal/logger"
+	"github.com/sanpezlo/chess/internal/resources"
 	"github.com/sanpezlo/chess/internal/version"
 	"github.com/sanpezlo/chess/internal/web"
 	"go.uber.org/fx"
@@ -69,6 +70,7 @@ var Module = fx.Options(
 	config.Module,
 	logger.Module,
 	db.Module,
+	resources.Module,
 	fx.Provide(NewRouter),
 	fx.Provide(NewServer),
 	fx.Invoke(func(l *zap.Logger, server *http.Server) {
