@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/sanpezlo/chess/internal/config"
+	"github.com/sanpezlo/chess/internal/db"
 	"github.com/sanpezlo/chess/internal/logger"
 	"github.com/sanpezlo/chess/internal/version"
 	"github.com/sanpezlo/chess/internal/web"
@@ -67,6 +68,7 @@ func NewServer(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger, router chi.Ro
 var Module = fx.Options(
 	config.Module,
 	logger.Module,
+	db.Module,
 	fx.Provide(NewRouter),
 	fx.Provide(NewServer),
 	fx.Invoke(func(l *zap.Logger, server *http.Server) {
