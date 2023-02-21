@@ -12,11 +12,11 @@ func New(lc fx.Lifecycle, l *zap.Logger) (*PrismaClient, error) {
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
-			l.Debug("Connecting to database")
+			l.Debug("Database connecting")
 			return prisma.Connect()
 		},
 		OnStop: func(context.Context) error {
-			l.Debug("Disconnecting from database")
+			l.Debug("Database disconnecting")
 			return prisma.Disconnect()
 		},
 	})

@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"net"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -10,14 +9,25 @@ import (
 	"github.com/sanpezlo/chess/internal/config"
 	"github.com/sanpezlo/chess/internal/db"
 	"github.com/sanpezlo/chess/internal/logger"
-	"github.com/sanpezlo/chess/internal/resources"
 	"github.com/sanpezlo/chess/internal/version"
 	"github.com/sanpezlo/chess/internal/web"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
 
-func NewRouter(cfg *config.Config, l *zap.Logger) chi.Router {
+var Module = fx.Options(
+	config.Module,
+	logger.Module,
+	db.Module,
+	fx.Provide(New),
+	fx.Invoke(func(router chi.Router) {
+		router.Get("/version", func(w http.ResponseWriter, r *http.Request) {
+			web.Write(w, map[string]string{"version": version.Version})
+		})
+	}),
+)
+
+func New(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger) chi.Router {
 	router := chi.NewRouter()
 
 	origins := []string{
@@ -39,14 +49,6 @@ func NewRouter(cfg *config.Config, l *zap.Logger) chi.Router {
 		}),
 	)
 
-	router.Get("/version", func(w http.ResponseWriter, r *http.Request) {
-		web.Write(w, map[string]string{"version": version.Version})
-	})
-
-	return router
-}
-
-func NewServer(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger, router chi.Router) *http.Server {
 	server := &http.Server{
 		Handler: router,
 		Addr:    cfg.ListenAddr,
@@ -54,7 +56,12 @@ func NewServer(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger, router chi.Ro
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			server.BaseContext = func(net.Listener) context.Context { return ctx }
+			l.Debug("HTTP server starting")
+			go func() {
+				if err := server.ListenAndServe(); err != http.ErrServerClosed {
+					l.Fatal("HTTP server failed", zap.Error(err))
+				}
+			}()
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
@@ -63,22 +70,5 @@ func NewServer(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger, router chi.Ro
 		},
 	})
 
-	return server
+	return router
 }
-
-var Module = fx.Options(
-	config.Module,
-	logger.Module,
-	db.Module,
-	resources.Module,
-	fx.Provide(NewRouter),
-	fx.Provide(NewServer),
-	fx.Invoke(func(l *zap.Logger, server *http.Server) {
-		l.Debug("HTTP server starting")
-		go func() {
-			if err := server.ListenAndServe(); err != http.ErrServerClosed {
-				l.Fatal("HTTP server failed", zap.Error(err))
-			}
-		}()
-	}),
-)
