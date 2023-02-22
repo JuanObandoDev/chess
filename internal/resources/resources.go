@@ -6,5 +6,5 @@ import (
 )
 
 var Module = fx.Options(
-	fx.Provide(user.Module),
+	user.Module,
 )
