@@ -3,6 +3,8 @@ module github.com/sanpezlo/chess
 go 1.20
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+	github.com/dyninc/qstring v0.0.0-20160719172318-ab5840a88e81
 	github.com/go-chi/chi v1.5.4
 	github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365
 	github.com/joho/godotenv v1.5.1
