@@ -57,6 +57,14 @@ func (h *HumanReadable) Error() string {
 	return h.err.Error()
 }
 
+func WithDescription(err error, desc string) error {
+	return &HumanReadable{err, desc, ""}
+}
+
+func WithSuggestion(err error, desc, suggest string) error {
+	return &HumanReadable{err, desc, suggest}
+}
+
 func errToWriter(w http.ResponseWriter, err error) {
 	if err == nil {
 		err = errors.New("Unknown or unspecified error")
