@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/sanpezlo/chess/internal/db"
@@ -38,9 +37,6 @@ func (r *Resource) GetUser(ctx context.Context, userId string, public bool) (*Us
 		FindUnique(db.User.ID.Equals(userId)).
 		Exec(ctx)
 	if err != nil {
-		if errors.Is(err, db.ErrNotFound) {
-			return nil, nil
-		}
 		return nil, err
 	}
 
@@ -52,9 +48,6 @@ func (r *Resource) GetUserByEmail(ctx context.Context, email string, public bool
 		FindUnique(db.User.Email.Equals(email)).
 		Exec(ctx)
 	if err != nil {
-		if errors.Is(err, db.ErrNotFound) {
-			return nil, nil
-		}
 		return nil, err
 	}
 
