@@ -51,6 +51,8 @@ func (r *Resource) CreateProvider(ctx context.Context, userID, accountID, userna
 		db.OAuthProvider.Username.Set(username),
 		db.OAuthProvider.Email.Set(email),
 		db.OAuthProvider.Provider.Set(aouthProvider),
+	).With(
+		db.OAuthProvider.User.Fetch(),
 	).Exec(ctx)
 
 	if err != nil {
