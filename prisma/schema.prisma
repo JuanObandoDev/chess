@@ -11,14 +11,31 @@ generator client {
     previewFeatures = ["fullTextSearch"]
 }
 
+enum AuthProvider {
+    GITHUB
+    DISCORD
+    UNDEFINED
+}
+
 model User {
-    id    String  @id @default(uuid())
-    email String  @unique
-    name  String  @db.VarChar(64)
-    bio   String?
-    admin Boolean @default(false)
+    id             String          @id @default(uuid())
+    email          String          @unique
+    name           String          @db.VarChar(64)
+    bio            String?
+    admin          Boolean         @default(false)
+    oauthProviders OAuthProvider[]
 
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     deletedAt DateTime?
+}
+
+model OAuthProvider {
+    id        String       @id @default(uuid())
+    userId    String
+    user      User         @relation(fields: [userId], references: [id])
+    accountId String       @unique
+    username  String
+    email     String
+    provider  AuthProvider
 }

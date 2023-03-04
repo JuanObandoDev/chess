@@ -6,12 +6,18 @@ import (
 	"github.com/sanpezlo/chess/internal/db"
 )
 
+type OAuthProvider struct {
+	Username string `json:"username"`
+	Provider string `json:"provider"`
+}
+
 type User struct {
-	ID    string  `json:"id"`
-	Email string  `json:"email"`
-	Name  string  `json:"name"`
-	Bio   *string `json:"bio"`
-	Admin bool    `json:"admin"`
+	ID             string          `json:"id"`
+	Email          string          `json:"email"`
+	Name           string          `json:"name"`
+	Bio            *string         `json:"bio"`
+	Admin          bool            `json:"admin"`
+	OAuthProviders []OAuthProvider `json:"oauthProvider"`
 
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
@@ -19,13 +25,26 @@ type User struct {
 }
 
 func FromModel(u *db.UserModel, public bool) *User {
-	user := &User{
-		ID:    u.InnerUser.ID,
-		Email: u.InnerUser.Email,
+	var oauthProviders []OAuthProvider
 
-		Name:      u.InnerUser.Name,
-		Bio:       u.InnerUser.Bio,
-		Admin:     u.InnerUser.Admin,
+	if u.RelationsUser.OauthProviders != nil {
+		oauthProviders = make([]OAuthProvider, 0, len(u.RelationsUser.OauthProviders))
+		for _, v := range u.RelationsUser.OauthProviders {
+			oauthProviders = append(oauthProviders, OAuthProvider{
+				Username: v.Username,
+				Provider: string(v.Provider),
+			})
+		}
+	}
+
+	user := &User{
+		ID:             u.InnerUser.ID,
+		Email:          u.InnerUser.Email,
+		Name:           u.InnerUser.Name,
+		Bio:            u.InnerUser.Bio,
+		Admin:          u.InnerUser.Admin,
+		OAuthProviders: oauthProviders,
+
 		CreatedAt: u.InnerUser.CreatedAt,
 		UpdatedAt: u.InnerUser.UpdatedAt,
 		DeletedAt: u.InnerUser.DeletedAt,

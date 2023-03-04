@@ -6,6 +6,8 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/dyninc/qstring"
+	"github.com/gorilla/schema"
+	"github.com/pkg/errors"
 )
 
 func ParseQuery(w http.ResponseWriter, r *http.Request, out interface{}) bool {
@@ -34,4 +36,19 @@ func ParseBody(w http.ResponseWriter, r *http.Request, out interface{}) bool {
 		return false
 	}
 	return true
+}
+
+func DecodeBody(r *http.Request, v interface{}) error {
+	switch r.Header.Get("Content-Type") {
+	case "application/json":
+		return json.NewDecoder(r.Body).Decode(v)
+
+	case "application/x-www-form-urlencoded":
+		err := r.ParseForm()
+		if err != nil {
+			return errors.Wrap(err, "failed to parse form")
+		}
+		return schema.NewDecoder().Decode(v, r.PostForm)
+	}
+	return errors.Errorf("cannot decode content type %s", r.Header.Get("Content-Type"))
 }
