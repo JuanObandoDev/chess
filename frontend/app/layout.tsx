@@ -1,23 +1,34 @@
 import Link from "next/link";
-import "../styles/globals.css";
+import "@/styles/globals.css";
 
-export default function RootLayout({ children }:{ children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head />
       <body>
         <header>
-            <nav>
-                <ul>
-                    <div>
-                      <li><Link href="/" className="logo">Chess</Link></li>
-                    </div>
-                    <div className="links">
-                        <li><Link href="/login" className="login">Login</Link></li>
-                        <li><Link href="/signup" className="signup">SignUp</Link></li>
-                    </div>
-                </ul>
-            </nav>
+          <nav>
+            <ul>
+              <div>
+                <li>
+                  <Link href="/" className="logo">
+                    Chess
+                  </Link>
+                </li>
+              </div>
+              <div className="links">
+                <li>
+                  <Link href="/login" className="login">
+                    Login
+                  </Link>
+                </li>
+              </div>
+            </ul>
+          </nav>
         </header>
         {children}
         <footer>
