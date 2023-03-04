@@ -9,6 +9,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	"github.com/pkg/errors"
 	"github.com/sanpezlo/chess/internal/config"
+	"github.com/sanpezlo/chess/internal/db"
 	"github.com/sanpezlo/chess/internal/resources/auth"
 	"github.com/sanpezlo/chess/internal/resources/user"
 	"github.com/thanhpk/randstr"
@@ -26,7 +27,7 @@ type GitHubService struct {
 
 var _ AuthService = &GitHubService{}
 
-func NewGitHubService(cfg *config.Config) *GitHubService {
+func NewGitHubService(cfg *config.Config, userRepository user.Repository, authRepository auth.Repository) *GitHubService {
 	return &GitHubService{
 		cache: cache.New(10*time.Minute, 20*time.Minute),
 		oa2Config: &oauth2.Config{
@@ -35,6 +36,8 @@ func NewGitHubService(cfg *config.Config) *GitHubService {
 			Scopes:       []string{"read:user", "user:email"},
 			Endpoint:     github.Endpoint,
 		},
+		userRepository: userRepository,
+		authRepository: authRepository,
 	}
 }
 
@@ -70,9 +73,10 @@ func (gp *GitHubService) Login(ctx context.Context, state, code string) (*user.U
 	}
 
 	u, err := gp.userRepository.GetUserByEmail(ctx, email, false)
-	if err != nil {
+	if err != nil && err != db.ErrNotFound {
 		return nil, err
 	}
+
 	if u == nil {
 		u, err = gp.userRepository.CreateUser(ctx, email, githubUser.GetLogin())
 		if err != nil {
