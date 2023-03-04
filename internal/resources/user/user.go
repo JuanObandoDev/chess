@@ -36,6 +36,9 @@ func (r *Resource) CreateUser(ctx context.Context, email string, username string
 func (r *Resource) GetUser(ctx context.Context, userId string, public bool) (*User, error) {
 	user, err := r.dbClient.User.
 		FindUnique(db.User.ID.Equals(userId)).
+		With(
+			db.User.OauthProviders.Fetch(),
+		).
 		Exec(ctx)
 	if err != nil {
 		if errors.Is(err, db.ErrNotFound) {
@@ -50,6 +53,9 @@ func (r *Resource) GetUser(ctx context.Context, userId string, public bool) (*Us
 func (r *Resource) GetUserByEmail(ctx context.Context, email string, public bool) (*User, error) {
 	user, err := r.dbClient.User.
 		FindUnique(db.User.Email.Equals(email)).
+		With(
+			db.User.OauthProviders.Fetch(),
+		).
 		Exec(ctx)
 	if err != nil {
 		if errors.Is(err, db.ErrNotFound) {

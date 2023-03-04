@@ -11,6 +11,7 @@ import (
 	"github.com/sanpezlo/chess/internal/db"
 	"github.com/sanpezlo/chess/internal/logger"
 	"github.com/sanpezlo/chess/internal/resources"
+	"github.com/sanpezlo/chess/internal/services"
 	"github.com/sanpezlo/chess/internal/version"
 	"github.com/sanpezlo/chess/internal/web"
 	"go.uber.org/fx"
@@ -22,6 +23,7 @@ var Module = fx.Options(
 	logger.Module,
 	db.Module,
 	resources.Module,
+	services.Module,
 	api.Module,
 	fx.Provide(New),
 	fx.Invoke(func(router chi.Router) {
