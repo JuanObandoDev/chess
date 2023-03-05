@@ -18,7 +18,7 @@ type OAuthProvider interface {
 var Module = fx.Options(
 	github.Module,
 	discord.Module,
-	fx.Invoke(func(r chi.Router, gc *github.Controller) {
+	fx.Invoke(func(r chi.Router, gc *github.Controller, dc *discord.Controller) {
 		rtr := chi.NewRouter()
 
 		r.Mount("/auth", rtr)
@@ -27,9 +27,9 @@ var Module = fx.Options(
 
 		rtr.Post("/github/callback", gc.Callback)
 
-		rtr.Get("/discord/link", gc.Link)
+		rtr.Get("/discord/link", dc.Link)
 
-		rtr.Post("/discord/callback", gc.Callback)
+		rtr.Post("/discord/callback", dc.Callback)
 
 	}),
 )
