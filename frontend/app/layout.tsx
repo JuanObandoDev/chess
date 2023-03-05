@@ -1,5 +1,7 @@
 import Link from "next/link";
 import "@/styles/globals.css";
+import Image from "next/image";
+import Footer from "@/app/components/Footer";
 
 export default function RootLayout({
   children,
@@ -16,6 +18,7 @@ export default function RootLayout({
               <div>
                 <li>
                   <Link href="/" className="logo">
+                    <Image src="/logo.png" alt="chess Logo" width={30} height={30} />
                     Chess
                   </Link>
                 </li>
@@ -31,9 +34,7 @@ export default function RootLayout({
           </nav>
         </header>
         {children}
-        <footer>
-          <p>Copyright © 2023 SIS</p>
-        </footer>
+        <Footer />
       </body>
     </html>
   );

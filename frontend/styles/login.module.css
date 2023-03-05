@@ -1,0 +1,120 @@
+.main {
+    position: absolute;
+    top: 5rem;
+    left: 0;
+    right: 0;
+    bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    color: #fff;
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.description {
+    letter-spacing: 2px;
+    color: #fff;
+    margin: 0;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.github {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: .2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    padding: 20px 20px;
+    width: 40%;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.github:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.main div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.or {
+    display: inline-block;
+    position: relative;
+    color: #fff;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.or::before, .or::after {
+    content: '';
+    position: absolute;
+    width: 240px;
+    height: 1px;
+    background-color: #777;
+    top: 50%;
+}
+
+.or::before {
+    right: 100%;
+    margin-right: 10px;
+}
+
+.or::after {
+    left: 100%;
+    margin-left: 10px;
+}
+
+.discord {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: .2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #2C2F33;
+    color: #fff;
+    text-decoration: none;
+    padding: 20px 20px;
+    width: 40%;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.discord:hover {
+    background-color: #a8b7ca;
+    color: #000;
+}
+
+.ghicon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 1rem;
+}
+
+.drdicon{
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 1rem;
+}
