@@ -1,7 +1,7 @@
 import Link from "next/link";
 import "@/styles/globals.css";
 import Image from "next/image";
-import Footer from "@/app/components/footer";
+import Footer from "@/app/components/Footer";
 
 export default function RootLayout({
   children,
