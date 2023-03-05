@@ -16,7 +16,6 @@ func Write(w http.ResponseWriter, data interface{}) {
 	}
 
 	w.Header().Add("Content-Length", fmt.Sprint(len(bytes)))
-	fmt.Println("* ", string(bytes))
 	_, err = w.Write(bytes)
 
 	if err != nil {
