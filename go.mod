@@ -4,10 +4,13 @@ go 1.20
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+	github.com/bwmarrin/discordgo v0.27.0
 	github.com/dyninc/qstring v0.0.0-20160719172318-ab5840a88e81
 	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/cors v1.2.1
 	github.com/google/go-github/v50 v50.1.0
+	github.com/gorilla/schema v1.2.0
+	github.com/gorilla/securecookie v1.1.1
 	github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -23,11 +26,8 @@ require (
 )
 
 require (
-	github.com/bwmarrin/discordgo v0.27.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/gorilla/schema v1.2.0 // indirect
-	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/dig v1.16.1 // indirect
