@@ -25,6 +25,7 @@ func NewService(cfg *config.Config) *Service {
 var Module = fx.Options(
 	fx.Provide(NewService),
 	fx.Provide(NewGitHubService),
+	fx.Provide(NewDiscordService),
 )
 
 type AuthService interface {
