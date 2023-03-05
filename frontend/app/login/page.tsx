@@ -1,4 +1,7 @@
 import { API_ADDRESS } from "@/config";
+import styles from "@/styles/login.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
 
 async function getGithubLink(): Promise<string> {
   const req = new Request(`${API_ADDRESS}/auth/github/link`, {
@@ -34,9 +37,12 @@ export default async function Login() {
 
   return (
     <>
-      <main>
-        <a href={githubLink}>Github</a>
-        <a href={discordLink}>Discord</a>
+      <main className={styles.main}>
+        <h1 className={styles.title}>Login</h1>
+        <p className={styles.description}>Login with your Github or Discord account</p>
+        <a href={githubLink} className={styles.github}> <FontAwesomeIcon icon={faGithub} className={styles.ghicon} /> Login with Github</a>
+        <p className={styles.or}>or</p>
+        <a href={discordLink} className={styles.discord}> <FontAwesomeIcon icon={faDiscord} className={styles.drdicon} /> Login with Discord</a>
       </main>
     </>
   );
