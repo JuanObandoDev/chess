@@ -1,17 +1,41 @@
 import Link from "next/link";
 import "@/styles/globals.css";
+import { cookies } from "next/headers";
+import { API_ADDRESS } from "@/config";
 import Image from "next/image";
 import Footer from "@/app/components/Footer";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = cookies();
+
+  const session = cookieStore.get("x-session");
+
+  let user = null;
+
+  if (session) {
+    const response = await fetch(`${API_ADDRESS}/users/self`, {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: session.name + "=" + session.value,
+      },
+      cache: "no-store",
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      user = data;
+    }
+  }
+
   return (
     <html lang="en">
       <head />
       <body>
+        { !user? (<>
         <header>
           <nav>
             <ul>
@@ -35,6 +59,9 @@ export default function RootLayout({
         </header>
         {children}
         <Footer />
+        </>) : (
+          <>
+          </>)}
       </body>
     </html>
   );

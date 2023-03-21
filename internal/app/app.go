@@ -12,6 +12,7 @@ import (
 	"github.com/sanpezlo/chess/internal/logger"
 	"github.com/sanpezlo/chess/internal/resources"
 	"github.com/sanpezlo/chess/internal/services"
+	"github.com/sanpezlo/chess/internal/services/auth"
 	"github.com/sanpezlo/chess/internal/version"
 	"github.com/sanpezlo/chess/internal/web"
 	"go.uber.org/fx"
@@ -33,7 +34,7 @@ var Module = fx.Options(
 	}),
 )
 
-func New(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger) chi.Router {
+func New(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger, as *auth.Service) chi.Router {
 	router := chi.NewRouter()
 
 	origins := []string{
@@ -53,6 +54,7 @@ func New(lc fx.Lifecycle, cfg *config.Config, l *zap.Logger) chi.Router {
 			AllowCredentials: true,
 			MaxAge:           300,
 		}),
+		as.WithAuthentication,
 	)
 
 	server := &http.Server{

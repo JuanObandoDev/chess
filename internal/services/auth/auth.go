@@ -11,6 +11,7 @@ import (
 	"github.com/sanpezlo/chess/internal/resources/user"
 	"github.com/sanpezlo/chess/internal/web"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 )
 
 const secureCookieName = "x-session"
@@ -47,6 +48,20 @@ func (s *Service) EncodeAuthCookie(w http.ResponseWriter, user *user.User) {
 		Secure:   true,
 		HttpOnly: true,
 	})
+}
+
+func (s *Service) DecodeAuthCookie(r *http.Request, auth *Auth) bool {
+	cookie, err := r.Cookie(secureCookieName)
+	if err != nil {
+		return false
+	}
+
+	if err = s.sc.Decode(secureCookieName, cookie.Value, auth.Cookie); err != nil {
+		zap.L().Debug("failed to decode auth cookie", zap.Error(err))
+		return false
+	}
+
+	return true
 }
 
 var Module = fx.Options(

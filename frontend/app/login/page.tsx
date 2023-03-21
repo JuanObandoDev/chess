@@ -12,7 +12,7 @@ async function getGithubLink(): Promise<string> {
     },
   });
 
-  const res = await fetch(req, { cache: "force-cache" });
+  const res = await fetch(req, { cache: "no-store" });
   const data = await res.json();
   return data.url;
 }
@@ -26,7 +26,7 @@ async function getDiscordLink(): Promise<string> {
     },
   });
 
-  const res = await fetch(req, { cache: "force-cache" });
+  const res = await fetch(req, { cache: "no-store" });
   const data = await res.json();
   return data.url;
 }
