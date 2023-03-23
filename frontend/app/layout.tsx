@@ -22,7 +22,6 @@ export default async function RootLayout({
         "Content-Type": "application/json",
         Cookie: session.name + "=" + session.value,
       },
-      cache: "no-store",
     });
 
     if (response.status === 200) {
@@ -31,18 +30,24 @@ export default async function RootLayout({
     }
   }
 
+  console.log(user);
+
   return (
     <html lang="en">
       <head />
       <body>
-        { !user? (<>
         <header>
           <nav>
             <ul>
               <div>
                 <li>
                   <Link href="/" className="logo">
-                    <Image src="/logo.png" alt="chess Logo" width={30} height={30} />
+                    <Image
+                      src="/logo.png"
+                      alt="chess Logo"
+                      width={30}
+                      height={30}
+                    />
                     Chess
                   </Link>
                 </li>
@@ -59,9 +64,6 @@ export default async function RootLayout({
         </header>
         {children}
         <Footer />
-        </>) : (
-          <>
-          </>)}
       </body>
     </html>
   );

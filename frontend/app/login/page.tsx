@@ -39,10 +39,20 @@ export default async function Login() {
     <>
       <main className={styles.main}>
         <h1 className={styles.title}>Login</h1>
-        <p className={styles.description}>Login with your Github or Discord account</p>
-        <a href={githubLink} className={styles.github}> <FontAwesomeIcon icon={faGithub} className={styles.ghicon} /> Login with Github</a>
+        <p className={styles.description}>
+          Login with your Github or Discord account
+        </p>
+        <a href={githubLink} className={styles.github}>
+          {" "}
+          <FontAwesomeIcon icon={faGithub} className={styles.ghicon} /> Login
+          with Github
+        </a>
         <p className={styles.or}>or</p>
-        <a href={discordLink} className={styles.discord}> <FontAwesomeIcon icon={faDiscord} className={styles.drdicon} /> Login with Discord</a>
+        <a href={discordLink} className={styles.discord}>
+          {" "}
+          <FontAwesomeIcon icon={faDiscord} className={styles.drdicon} /> Login
+          with Discord
+        </a>
       </main>
     </>
   );
