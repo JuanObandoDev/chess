@@ -14,7 +14,11 @@ services:
     container_name: frontend_chess_container
     environment: 
       - NEXT_PUBLIC_API_ADDRESS=http://app:8080
-    build: ./frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/frontend
     ports:
       - ${FRONTEND_PORT}:3000
     restart: on-failure
@@ -36,7 +40,11 @@ services:
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
       - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
     tty: true
-    build: .
+    build: 
+      context: ./
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/chess
     ports:
       - ${PORT}:8080
     restart: on-failure
