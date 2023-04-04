@@ -18,6 +18,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prisma/prisma-client-go v0.17.0
 	github.com/shopspring/decimal v1.3.1
+	github.com/Southclaws/supervillain v1.3.1
 	github.com/takuoki/gocase v1.0.0
 	github.com/thanhpk/randstr v1.0.4
 	go.uber.org/fx v1.19.2
