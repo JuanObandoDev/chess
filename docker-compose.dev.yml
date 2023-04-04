@@ -1,38 +1,64 @@
 version: '3.9'
 services:
-  postgresdb:
+  traefik-dev:
+    image: traefik:v2.9
+    container_name: traefik_chess_dev_container
+    command:
+      - --api.insecure=true
+      - --api.debug=true
+      - --log.level=DEBUG
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=chess-dev-traefik-net
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - chess-dev-traefik-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik-dev.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik-dev.service=api@internal"
+
+  postgresdb-dev:
     image: postgres:latest
-    container_name: postgres_chess_container
+    container_name: postgres_chess_dev_container
     environment:
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRES_DB=${DATABASE_NAME}
     networks:
-      - chess-server
+      - chess-dev-postgres-net
 
-  frontend:
-    container_name: frontend_chess_container
+  web-dev:
+    container_name: web_chess_dev_container
     environment: 
-      - NEXT_PUBLIC_API_ADDRESS=http://app:8080
+      - NEXT_PUBLIC_API_ADDRESS=http://api.localhost
     build: 
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      context: ./web
+      dockerfile: Dockerfile
+      target: dev
     volumes:
-      - ./frontend:/frontend
-    ports:
-      - ${FRONTEND_PORT}:3000
+      - ./web:/web
+      - /web/node_modules/
     restart: on-failure
     networks:
-      - chess-server
+      chess-dev-traefik-net:
+        aliases:
+          - localhost
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web-dev.rule=Host(`localhost`)
 
-  app:
-    container_name: golang_chess_container
+  api-dev:
+    container_name: api_chess_dev_container
     environment:
-      - LISTEN_ADDR=:8080
+      - LISTEN_ADDR=:80
       - LOG_LEVEL=${LOG_LEVEL}
-      - DATABASE_URL=postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgresdb:5432/${DATABASE_NAME}
+      - DATABASE_URL=postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgresdb-dev:5432/${DATABASE_NAME}
       - PRODUCTION=true
-      - PUBLIC_WEB_ADDRESS=http://frontend:3000
+      - PUBLIC_WEB_ADDRESS=http://localhost
       - HASH_KEY=${HASH_KEY}
       - BLOCK_KEY=${BLOCK_KEY}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
@@ -42,18 +68,25 @@ services:
     tty: true
     build: 
       context: ./
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+      target: dev
     volumes:
       - ./:/chess
-    ports:
-      - ${PORT}:8080
+      - /chess/web/
     restart: on-failure
     depends_on:
-      - postgresdb
-      - frontend
+      - postgresdb-dev
     networks:
-      - chess-server
+      chess-dev-postgres-net:
+      chess-dev-traefik-net:
+        aliases:
+          - api.localhost
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api-dev.rule=Host(`api.localhost`)
 
 networks:
-  chess-server:
+  chess-dev-postgres-net:
     driver: bridge
+  chess-dev-traefik-net:
+    external: true

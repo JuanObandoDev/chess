@@ -11,7 +11,7 @@ type Config struct {
 	LogLevel   zapcore.Level `envconfig:"LOG_LEVEL"  default:"info"`
 
 	DatabaseURL         string `envconfig:"DATABASE_URL"          required:"true"`
-	ListenAddr          string `envconfig:"LISTEN_ADDR"           default:"0.0.0.0:8000"`
+	ListenAddr          string `envconfig:"LISTEN_ADDR"           default:"0.0.0.0:80"`
 	PublicWebAddress    string `envconfig:"PUBLIC_WEB_ADDRESS"    default:"http://localhost:3000"`
 	HashKey             []byte `envconfig:"HASH_KEY"              required:"true"`
 	BlockKey            []byte `envconfig:"BLOCK_KEY"             required:"true"`

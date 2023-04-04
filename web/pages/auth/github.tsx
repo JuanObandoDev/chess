@@ -15,7 +15,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     ctx.res.end();
     return { props: {} };
   } catch (e) {
-    console.error(e);
     return { props: { error: parseAPIError(e) } };
   }
 };

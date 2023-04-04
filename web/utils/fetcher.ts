@@ -50,7 +50,6 @@ export async function apiFetcher<T>(
 
   const request = buildRequest(pathWithQuery, opts);
   const response = await fetch(request);
-  console.log("response", response);
   const data = await getData(response);
 
   if (!isSuccessStatus(response.status)) {
@@ -61,7 +60,9 @@ export async function apiFetcher<T>(
 }
 
 export const buildRequest = (path: string, opts?: RequestInit): Request => {
-  const req = new Request(`${"http://localhost:8080"}${path}`, {
+  const req = new Request(`${API_ADDRESS}${path}`, {
+    mode: "cors",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
