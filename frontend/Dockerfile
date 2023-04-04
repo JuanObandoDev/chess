@@ -2,17 +2,13 @@ FROM node:alpine as base
 WORKDIR /frontend
 COPY . .
 RUN npm install
+ENV PORT=80
+EXPOSE 80
 
 
 FROM base as dev
-EXPOSE 80
 CMD [ "npm", "run", "dev" ]
 
-FROM base as builder
+FROM base
 RUN npm run build
-
-FROM node:alpine
-WORKDIR /frontend
-COPY --from=builder /frontend/build ./build
-EXPOSE 80
 CMD [ "npm", "run", "start" ]
