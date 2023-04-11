@@ -1,40 +1,22 @@
-version: '3.9'
+version: '3'
+
 services:
   traefik-dev:
     image: traefik:v2.9
     container_name: traefik_chess_dev_container
-    command:
-      - --api.insecure=true
-      - --api.debug=true
-      - --log.level=DEBUG
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=chess-dev-traefik-net
     ports:
       - 80:80
+      - 443:443
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/:/etc/traefik/:ro
     networks:
       - chess-dev-traefik-net
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik-dev.rule=Host(`traefik.localhost`)"
-      - "traefik.http.routers.traefik-dev.service=api@internal"
-
-  postgresdb-dev:
-    image: postgres:latest
-    container_name: postgres_chess_dev_container
-    environment:
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-      - POSTGRES_DB=${DATABASE_NAME}
-    networks:
-      - chess-dev-postgres-net
 
   web-dev:
     container_name: web_chess_dev_container
     environment: 
-      - NEXT_PUBLIC_API_ADDRESS=http://api.localhost
+      - NEXT_PUBLIC_API_ADDRESS=https://api.chess.localhost
     build: 
       context: ./web
       dockerfile: Dockerfile
@@ -43,13 +25,14 @@ services:
       - ./web:/web
       - /web/node_modules/
     restart: on-failure
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web-dev.rule=Host(`client.chess.localhost`)
+      - traefik.http.routers.web-dev.tls=true
     networks:
       chess-dev-traefik-net:
         aliases:
-          - localhost
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.web-dev.rule=Host(`localhost`)
+          - client.chess.localhost
 
   api-dev:
     container_name: api_chess_dev_container
@@ -58,7 +41,7 @@ services:
       - LOG_LEVEL=${LOG_LEVEL}
       - DATABASE_URL=postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgresdb-dev:5432/${DATABASE_NAME}
       - PRODUCTION=true
-      - PUBLIC_WEB_ADDRESS=http://localhost
+      - PUBLIC_WEB_ADDRESS=https://client.chess.localhost
       - HASH_KEY=${HASH_KEY}
       - BLOCK_KEY=${BLOCK_KEY}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
@@ -76,14 +59,25 @@ services:
     restart: on-failure
     depends_on:
       - postgresdb-dev
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api-dev.rule=Host(`api.chess.localhost`)
+      - traefik.http.routers.api-dev.tls=true
     networks:
       chess-dev-postgres-net:
       chess-dev-traefik-net:
         aliases:
-          - api.localhost
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.api-dev.rule=Host(`api.localhost`)
+          - api.chess.localhost
+
+  postgresdb-dev:
+    image: postgres:latest
+    container_name: postgres_chess_dev_container
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    networks:
+      - chess-dev-postgres-net
 
 networks:
   chess-dev-postgres-net:
