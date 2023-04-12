@@ -1,4 +1,4 @@
-FROM node:alpine as base
+FROM node:bullseye as base
 WORKDIR /web
 COPY . .
 RUN npm install

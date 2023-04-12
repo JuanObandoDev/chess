@@ -12,7 +12,8 @@ type Config struct {
 
 	DatabaseURL         string `envconfig:"DATABASE_URL"          required:"true"`
 	ListenAddr          string `envconfig:"LISTEN_ADDR"           default:"0.0.0.0:80"`
-	PublicWebAddress    string `envconfig:"PUBLIC_WEB_ADDRESS"    default:"http://localhost:3000"`
+	CookieDomain        string `envconfig:"COOKIE_DOMAIN"         default:".chess.localhost"`
+	PublicWebAddress    string `envconfig:"PUBLIC_WEB_ADDRESS"    default:"https://chess.localhost"`
 	HashKey             []byte `envconfig:"HASH_KEY"              required:"true"`
 	BlockKey            []byte `envconfig:"BLOCK_KEY"             required:"true"`
 	GithubClientID      string `envconfig:"GITHUB_CLIENT_ID"      required:"true"`

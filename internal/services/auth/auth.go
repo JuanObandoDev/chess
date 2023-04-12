@@ -23,11 +23,12 @@ type Cookie struct {
 }
 
 type Service struct {
-	sc *securecookie.SecureCookie
+	sc     *securecookie.SecureCookie
+	domain string
 }
 
 func NewService(cfg *config.Config) *Service {
-	return &Service{sc: securecookie.New(cfg.HashKey, cfg.BlockKey)}
+	return &Service{sc: securecookie.New(cfg.HashKey, cfg.BlockKey), domain: cfg.CookieDomain}
 }
 
 func (s *Service) EncodeAuthCookie(w http.ResponseWriter, user *user.User) {
@@ -46,6 +47,8 @@ func (s *Service) EncodeAuthCookie(w http.ResponseWriter, user *user.User) {
 		Value:    encoded,
 		Path:     "/",
 		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+		Domain:   s.domain,
 		HttpOnly: true,
 	})
 }
