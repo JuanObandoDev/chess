@@ -1,14 +1,65 @@
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 
 import { CallbackSchema } from "@/types/GitHub";
-import { UserSchema } from "@/types/User";
+import { User, UserSchema } from "@/types/User";
 import { apiFetcher, isSuccessStatus } from "@/utils/fetcher";
 import { handleError, parseAPIError } from "@/utils/error";
+import { withSessionSsr } from "./session";
 
-export async function auth(
+export function withAuthSSR<
+  P extends {
+    [key: string]: unknown;
+  } = {
+    [key: string]: unknown;
+  }
+>(
+  handler: (
+    context: GetServerSidePropsContext
+  ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
+  destination = "/auth/login"
+) {
+  return withSessionSsr<P>((ctx) => {
+    if (ctx.req.session.user === undefined)
+      return {
+        redirect: {
+          destination,
+          permanent: false,
+        },
+        props: {},
+      };
+    return handler(ctx);
+  });
+}
+
+export function withoutAuthSSR<
+  P extends {
+    [key: string]: unknown;
+  } = {
+    [key: string]: unknown;
+  }
+>(
+  handler: (
+    context: GetServerSidePropsContext
+  ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>,
+  destination = "/dashboard"
+) {
+  return withSessionSsr<P>((ctx) => {
+    if (ctx.req.session.user !== undefined)
+      return {
+        redirect: {
+          destination,
+          permanent: false,
+        },
+        props: {},
+      };
+    return handler(ctx);
+  });
+}
+
+export async function getAuth(
   provider: "discord" | "github",
   ctx: GetServerSidePropsContext
-): Promise<string> {
+): Promise<{ user: User; setCookie: string }> {
   const payload = CallbackSchema.parse(ctx.query);
 
   const { response, data } = await apiFetcher(`/auth/${provider}/callback`, {
@@ -29,5 +80,5 @@ export async function auth(
     });
   }
 
-  return setCookie;
+  return { user: data, setCookie };
 }

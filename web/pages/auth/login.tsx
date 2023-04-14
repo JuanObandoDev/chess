@@ -1,4 +1,7 @@
 import { useLink } from "@/hooks/auth";
+import { withoutAuthSSR } from "@/utils/auth";
+
+export const getServerSideProps = withoutAuthSSR(() => ({ props: {} }));
 
 export default function Login() {
   const {

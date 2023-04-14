@@ -10,7 +10,7 @@ type Props = {
 
 export const getServerSideProps = withoutAuthSSR<Props>(async (ctx) => {
   try {
-    const { user, setCookie } = await getAuth("github", ctx);
+    const { user, setCookie } = await getAuth("discord", ctx);
     ctx.res.setHeader("set-cookie", setCookie);
     ctx.req.session.user = user;
     await ctx.req.session.save();
@@ -26,7 +26,7 @@ export const getServerSideProps = withoutAuthSSR<Props>(async (ctx) => {
   }
 });
 
-export default function Github({
+export default function Discord({
   error,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
