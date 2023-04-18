@@ -34,4 +34,4 @@ docker-compose -f docker-compose.dev.yml up
 
 you can access the client application in your web browser at [client.chess.localhost](https://client.chess.localhost).
 
-Developers may also use (devcontainers)[https://code.visualstudio.com/docs/devcontainers/containers] to further streamline their development process. Devcontainers is a feature of Visual Studio Code that allows you to develop in a containerized environment.
+Developers may also use [devcontainers](https://code.visualstudio.com/docs/devcontainers/containers) to further streamline their development process. Devcontainers is a feature of Visual Studio Code that allows you to develop in a containerized environment.
