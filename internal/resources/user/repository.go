@@ -3,7 +3,7 @@ package user
 import "context"
 
 type Repository interface {
-	CreateUser(ctx context.Context, email string, username string) (*User, error)
+	CreateUser(ctx context.Context, email, username, avatar string) (*User, error)
 
 	GetUser(ctx context.Context, userId string, public bool) (*User, error)
 	GetUserByEmail(ctx context.Context, email string, public bool) (*User, error)

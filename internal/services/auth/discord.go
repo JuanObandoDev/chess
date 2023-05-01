@@ -114,7 +114,7 @@ func (gp *DiscordService) Login(ctx context.Context, state, code string) (*user.
 	}
 
 	if u == nil {
-		u, err = gp.userRepository.CreateUser(ctx, email, discordUser.Username)
+		u, err = gp.userRepository.CreateUser(ctx, email, discordUser.Username, discordUser.AvatarURL(""))
 		if err != nil {
 			return nil, err
 		}

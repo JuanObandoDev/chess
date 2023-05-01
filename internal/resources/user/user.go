@@ -20,10 +20,11 @@ var Module = fx.Options(
 	fx.Provide(New),
 )
 
-func (r *Resource) CreateUser(ctx context.Context, email string, username string) (*User, error) {
+func (r *Resource) CreateUser(ctx context.Context, email, username, avatar string) (*User, error) {
 	user, err := r.dbClient.User.CreateOne(
 		db.User.Email.Set(email),
 		db.User.Name.Set(username),
+		db.User.Avatar.Set(avatar),
 	).Exec(ctx)
 	if err != nil {
 		return nil, err

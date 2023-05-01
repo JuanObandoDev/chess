@@ -15,6 +15,7 @@ type User struct {
 	ID             string          `json:"id"`
 	Email          string          `json:"email"`
 	Name           string          `json:"name"`
+	Avatar         string          `json:"avatar"`
 	Bio            *string         `json:"bio"`
 	Admin          bool            `json:"admin"`
 	OAuthProviders []OAuthProvider `json:"oauthProvider"`
@@ -41,6 +42,7 @@ func FromModel(u *db.UserModel, public bool) *User {
 		ID:             u.InnerUser.ID,
 		Email:          u.InnerUser.Email,
 		Name:           u.InnerUser.Name,
+		Avatar:         u.InnerUser.Avatar,
 		Bio:            u.InnerUser.Bio,
 		Admin:          u.InnerUser.Admin,
 		OAuthProviders: oauthProviders,

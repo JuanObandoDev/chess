@@ -21,6 +21,7 @@ model User {
     id             String          @id @default(uuid())
     email          String          @unique
     name           String          @db.VarChar(64)
+    avatar         String
     bio            String?
     admin          Boolean         @default(false)
     oauthProviders OAuthProvider[]

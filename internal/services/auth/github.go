@@ -78,7 +78,7 @@ func (gp *GitHubService) Login(ctx context.Context, state, code string) (*user.U
 	}
 
 	if u == nil {
-		u, err = gp.userRepository.CreateUser(ctx, email, githubUser.GetLogin())
+		u, err = gp.userRepository.CreateUser(ctx, email, githubUser.GetLogin(), githubUser.GetAvatarURL())
 		if err != nil {
 			return nil, err
 		}

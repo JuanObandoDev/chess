@@ -10,6 +10,7 @@ export const UserSchema = z.object({
   id: z.string(),
   email: z.string(),
   name: z.string(),
+  avatar: z.string(),
   bio: z.string().nullable(),
   admin: z.boolean(),
   oauthProvider: OAuthProviderSchema.array().nullable(),
