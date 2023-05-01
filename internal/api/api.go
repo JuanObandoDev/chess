@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/sanpezlo/chess/internal/api/auth"
+	"github.com/sanpezlo/chess/internal/api/games"
 	"github.com/sanpezlo/chess/internal/api/users"
 	"go.uber.org/fx"
 )
@@ -9,4 +10,5 @@ import (
 var Module = fx.Options(
 	users.Module,
 	auth.Module,
+	games.Module,
 )
