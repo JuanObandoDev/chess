@@ -19,26 +19,28 @@ func New() *Service {
 var Module = fx.Options(
 	fx.Provide(New),
 	fx.Invoke(func(s *Service) {
-		s.Websocket.HandleConnect(func(s *melody.Session) {
+		s.Websocket.HandleConnect(func(session *melody.Session) {
 			id := uuid.NewString()
-			s.Set("id", id)
+			session.Set("id", id)
 			zap.L().Debug("Websocket " + id + " connected")
 		})
 
-		s.Websocket.HandleDisconnect(func(s *melody.Session) {
-			id, exists := s.Get("id")
+		s.Websocket.HandleDisconnect(func(session *melody.Session) {
+			id, exists := session.Get("id")
 			if !exists {
 				return
 			}
 			zap.L().Debug("Websocket " + id.(string) + " disconnected")
 		})
 
-		s.Websocket.HandleMessage(func(s *melody.Session, msg []byte) {
-			id, exists := s.Get("id")
+		s.Websocket.HandleMessage(func(session *melody.Session, msg []byte) {
+			id, exists := session.Get("id")
 			if !exists {
 				return
 			}
-			zap.L().Debug("Websocket "+id.(string)+"message", zap.ByteString("msg", msg))
+			zap.L().Debug("Websocket "+id.(string)+" message", zap.ByteString("msg", msg))
+
+			s.Websocket.Broadcast(msg)
 		})
 	}),
 )
